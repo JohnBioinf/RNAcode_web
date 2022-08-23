@@ -1,0 +1,17 @@
+.undodir/
+en.utf-8.add.spl
+Session.vim
+__pycache__
+job_submissions/*
+*swp
+*swo
+static/results/*
+parameters_backend_local.json
+parameters_frontend_local.json
+flask.out
+flask.log
+merged.tab
+syn.tab
+taxa.tab
+taxdump.tar.gz
+snipps/*
