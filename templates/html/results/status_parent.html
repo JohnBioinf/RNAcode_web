@@ -1,0 +1,116 @@
+{% if custom_db %}
+<!--  Status of cutom data base --!>
+<div class="row my-2">
+	<h3>Custom Data Base</h3>
+	{% if fullJob[0] == "CD" %}
+	<h4>The data base was build with {{ fullJob[1] }} sequences.</h4>
+	{% elif fullJob[0] == "F" %}
+	<h4>No data base of sufficient size could be constructed.</h4>
+	{% endif %}
+	{% for i in range(1, (num_iterations + 1)) %}
+	<div class="ms-4">
+
+		{% if i == num_iterations and (blastn[0] == "CD" and seqSel[0] == "CD") %}
+		<h4>{{ i }}. Iteration <img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"></h4>
+		{% elif i == num_iterations and (blastn[0] == "F" or seqSel[0] == "F")%}
+		<h4>{{ i }}. Iteration <img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"></h4>
+		{% elif i == num_iterations %}
+		<h4>{{ i }}. Iteration <img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"></h4>
+		{% else %}
+		<h4>{{ i }}. Iteration <img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"></h4>
+		{% endif %}
+
+		{% if i == num_iterations %}
+		{% if blastn[0] == "NS" %}
+		<h4 class="ms-4"><img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20"> Blast</h4>
+		{% elif blastn[0] == "R" %}
+		<h4 class="ms-4"><img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"> Blast</h4>
+		{% elif blastn[0] == "F" %}
+		<h4 class="ms-4"><img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"> Blast</h4>
+		{% elif blastn[0] == "CD" %}
+		<h4 class="ms-4"><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"> Blast</h4>
+		{% endif %}
+
+		{% if seqSel[0] == "NS" %}
+		<h4 class="ms-4"><img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20"> Select Sequences</h4>
+		{% elif seqSel[0] == "R" %}
+		<h4 class="ms-4"><img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"> Select Sequences</h4>
+		{% elif seqSel[0] == "F" %}
+		<h4 class="ms-4"><img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"> Select Sequences</h4>
+		{% elif seqSel[0] == "CD" %}
+		<h4 class="ms-4"><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"> Select Sequences</h4>
+		{% endif %}
+		{% endif %}
+		{% endfor %}
+		{% for i in range(1, (num_iterations + 1)) %}
+	</div>
+	{% endfor %}
+</div>
+
+<div class="ms-4">
+	{% if buildDB[0] == "NS" %}
+	<h4><img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20"> Build Data Base</h4>
+	{% elif buildDB[0] == "R" %}
+	<h4><img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"> Build Data Base</h4>
+	{% elif buildDB[0] == "F" %}
+	<h4><img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"> Build Data Base</h4>
+	{% elif buildDB[0] == "CD" %}
+	<h4><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"> Build Data Base</h4>
+	{% endif %}
+</div>
+{% endif %}
+<!--  Status child jobs --!>
+<div class="row my-2">
+	<h3>Child Jobs
+			<button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#Child-jobs" aria-expanded="false" aria-controls="Child-jobs">
+			List all children
+		</button>
+	</h3>
+	<h4>The job was split up into {{ num_children }} child processes.</h4>
+	<div class="ms-4">
+		<h4><img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20"> {{ num_waiting }} jobs are waiting</h4>
+		<h4><img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"> {{ num_running }} jobs are running</h4>
+		<h4 class="text-success"><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"> {{ num_success }} jobs finished sucessfully</h4>
+		<h4 class="text-warning"><img src="{{ url_for('static', filename='failure.svg')}}" width="20" height="20"> {{ num_failed }} jobs finished with no result</h4>
+		<h4 class="text-danger"><img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"> {{ num_error }} jobs encountered an error</h4>
+	</div>
+	
+	<div class="collapse card card-body mx-4" id="Child-jobs"><div class="row overflow-auto" style="height:25vw">
+		{% for child_job_id, child_status in status_dic.items() if child_job_id not in ["jobStatus", "customDB"] %}
+		<div class="ml-4">
+			<div class="row">
+				{%- if child_status[0] == "R" %}
+				<h4>
+					<img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20">
+					{%- elif child_status[0] == "E" %}
+				<h4 class="text-danger">
+					<img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20">
+					{%- elif child_status[0] == "F" %}
+				<h4 class="text-warning">
+					<img src="{{ url_for('static', filename='failure.svg')}}" width="20" height="20">
+					{%- elif child_status[0] == "CD" %}
+				<h4 class="text-success">
+					<img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20">
+					{% elif child_status[0] == "NS" %}
+				<h4>
+					<img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20">
+					{%- endif %}
+					{{ loop.index }}. Job "{{ child_job_id }}"
+					{%- if child_status[0] == "R" %}
+					is running.
+					{%- elif child_status[0] == "F" %}
+					finished with no result.
+					{%- elif child_status[0] == "E" %}
+					encountered an error.
+					{%- elif child_status[0] == "CD" %}
+					finished sucessfully.
+					{%- endif %}
+					{% if child_status[0] != "NS" %}
+					<a href="{{ url_for("submission_by_url", job_id=child_job_id) }}">See full results</a>
+					{%- endif %}
+				</h4>
+			</div>
+		</div>
+		{% endfor %}
+	</div></div>
+</div>

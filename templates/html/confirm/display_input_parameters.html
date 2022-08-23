@@ -1,0 +1,52 @@
+<div class="row">
+	<div class="accordion" id="input_sequences">
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="headingOne">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ job_id }}One" aria-expanded="false" aria-controls="collapse{{ job_id }}One">
+					Input Sequence
+				</button>
+			</h2>
+			<div id="collapse{{ job_id }}One" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+				<div style="height: 20vh" class="accordion-body overflow-auto">
+					<p style="font-family: DejaVu Sans Mono" class="text-break">{{ input_seq_nuc }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row mt-2">
+	<h4>Selection Arguments</h4>
+	<div class="col">
+		<p>Sequences in the aligment must have a pairwise distance to any other
+		sequence of <b>{{ min_pair_dist }}%</b>.</p>
+	</div>
+	<div class="col">
+		<p>Sequences can only have pairwise distance to the input sequence of
+		<b>{{ max_pair_dist }}%</b>.</p>
+	</div>
+	<div class="col">
+		<p>Sequences are searched in the 
+{%- if db_type == "nt" -%}
+		<b> NCBI non redundant nucleotide data base</b>.</p>
+{%- elif db_type == "refseq" -%}
+		<b> RefSeq Representative Genome Database</b>.</p>
+{%- endif -%}
+	</div>
+</div>
+{%- if not submitted -%}
+<div class="row">
+	<h4> Query Information</h4>
+	<div class="col">
+		<p>Information about the submission can be checked on with the identifier
+		<b>{{ job_id }}</b></p>
+	</div>
+	<div class="col">
+		<p>When the job terminates <b>{{ email }}</b> will receive a notification</p>
+		{%- if email == "Nobody" -%}
+		<p class="text-danger">Please save the job id as this will be the only way
+		to check the progress of your job. You can click on the field "Check" at the
+		top bar to get the status of your job by using the job id.</p>
+		{%- endif -%}
+	</div>
+</div>
+{%- endif -%}

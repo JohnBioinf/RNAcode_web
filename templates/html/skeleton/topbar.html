@@ -1,0 +1,22 @@
+<div class="row justify-content-center">
+	<div class="col-sm-9 col-md-3 col-lg-2 align-self-center text-center m-2">
+		<a href="{{ url_for('routing')}}">
+			<img src="{{ url_for('static', filename='RNAcode_logo_text_inv.svg')}}" class="w-50"></a>
+	</div>
+	<div class="col-sm-4 col-md-2 col-lg-1 align-self-center text-center p-sm-3">
+		<b title="Go to documentation">
+			<a class="text-decoration-none text-light" href="{{ url_for('documentation') }}">Docs</a></b>
+	</div>
+	<div class="col-sm-4 col-md-2 col-lg-1 align-self-center text-center p-sm-3">
+		<b title="Submit single sequence">
+			<a class="text-decoration-none text-light" href="{{ url_for('single_submission_fresh') }}">Submit single</a></b>
+	</div>
+	<div class="col-sm-4 col-md-2 col-lg-1 align-self-center text-center p-sm-3">
+		<b title="Bulk submission">
+			<a class="text-decoration-none text-light" href="{{ url_for('bulk_submission') }}">Submit bulk</a></b>
+	</div>
+	<div class="col-sm-4 col-md-2 col-lg-1 align-self-center text-center p-sm-3">
+		<b title="Check job">
+			<a class="text-decoration-none text-light" href="{{ url_for('check') }}">Check</a></b>
+	</div>
+</div>

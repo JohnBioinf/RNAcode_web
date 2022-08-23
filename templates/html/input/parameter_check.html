@@ -1,0 +1,155 @@
+<!-- input_seq_nuc -->
+{% macro input_seq_nuc_error(input_check_dic) %}
+{%- if input_check_dic["input_seq_nuc"] == "Empty" -%}
+<br>
+<small class="text-danger">
+	Input sequence is empty.
+</small>
+{%- elif input_check_dic["input_seq_nuc"] == "To long" -%}
+<br>
+<small class="text-danger">
+	Input sequence is to long.
+</small>
+{%- elif input_check_dic["input_seq_nuc"] == "To short" -%}
+<br>
+<small class="text-danger">
+	Input sequence is to short.
+</small>
+{%- elif input_check_dic["input_seq_nuc"] != "" -%}
+<br>
+<small class="text-danger">
+	Input sequence is not a nucleotide sequence. Offending letters are {{ input_check_dic["input_seq_nuc"] }}.
+</small>
+{%- endif -%}
+{% endmacro %}
+
+{% macro input_seq_nuc_with_variable(input_seq_nuc, input_check_dic) %}
+{%- if input_check_dic["input_seq_nuc"] != "" -%}
+<small class="text-danger">
+	ERROR input sequence:
+</small>
+{{ input_seq_nuc_error(input_check_dic) }}
+<br>
+{%- endif -%}
+{% endmacro %}
+
+<!-- max_pair_dist -->
+{% macro max_pair_dist_error(input_check_dic) %}
+{%- if input_check_dic["max_pair_dist"] == "NaN" -%}
+<br>
+<small class="text-danger">
+	This is not a real number.
+</small>
+{%- elif input_check_dic["max_pair_dist"] == "Range"-%}
+<br>
+<small class="text-danger">
+	The distance must be above 0% and below 100%. And must be higher than
+	min. pairwise distance.
+</small>
+{%- endif -%}
+{% endmacro %}
+
+{% macro max_pair_dist_with_variable(max_pair_dist, input_check_dic) %}
+{%- if input_check_dic["max_pair_dist"] != "" -%}
+<small class="text-danger">
+	ERROR maximal pairwise distance: {{ max_pair_dist }}
+</small>
+{{ max_pair_dist_error(input_check_dic) }}
+<br>
+{%- endif -%}
+{% endmacro %}
+
+<!-- min_pair_dist -->
+{% macro min_pair_dist_error(input_check_dic) %}
+{%- if input_check_dic["min_pair_dist"] == "NaN" -%}
+<br>
+<small class="text-danger">
+	This is not a real number.
+</small>
+{%- elif input_check_dic["min_pair_dist"] == "Range"-%}
+<br>
+<small class="text-danger">
+	The distance must be above 0% and below 100%. And must be lower than
+	max. pairwise distance.
+</small>
+{%- endif -%}
+{% endmacro %}
+
+{% macro min_pair_dist_with_variable(min_pair_dist, input_check_dic) %}
+{%- if input_check_dic["min_pair_dist"] != "" -%}
+<small class="text-danger">
+	ERROR minimal pairwise distance: {{ min_pair_dist }}
+</small>
+{{ min_pair_dist_error(input_check_dic) }}
+<br>
+{%- endif -%}
+{% endmacro %}
+
+<!-- db_type -->
+{% macro db_type_error(input_check_dic) %}
+{%- if input_check_dic["db_type"] == "Wrong type" -%}
+<br>
+<small class="text-danger">
+	Incorect DB type.
+</small>
+{%- endif -%}
+{% endmacro %}
+
+{% macro db_type_with_variable(db_type, input_check_dic) %}
+{%- if input_check_dic["db_type"] != "" -%}
+<small class="text-danger">
+	ERROR DB type: {{ db_type }}
+</small>
+{{ db_type_error(input_check_dic) }}
+<br>
+{%- endif -%}
+{% endmacro %}
+<!-- job_id -->
+{% macro job_id_error(input_check_dic) %}
+{%- if input_check_dic["job_id"] == "Length" -%}
+<br>
+<small class="text-danger">
+	The name is to long.
+</small>
+{%- elif input_check_dic["job_id"] == "Char" -%}
+<br>
+<small class="text-danger">
+	The name can only contain characters, numbers and "_", "-".
+</small>
+{%- elif input_check_dic["job_id"] == "Already exists" -%}
+<br>
+<small class="text-danger">
+	The job name is already used.
+</small>
+{%- endif -%}
+{% endmacro %}
+
+{% macro job_id_with_variable(job_id, input_check_dic) %}
+{%- if input_check_dic["job_id"] != "" -%}
+<small class="text-danger">
+	ERROR job name: {{ job_id }}
+</small>
+{{ job_id_error(input_check_dic) }}
+<br>
+{%- endif -%}
+{% endmacro %}
+
+<!-- email -->
+{% macro email_error(input_check_dic) %}
+{%- if input_check_dic["email"] != "" -%}
+<br>
+<small class="text-danger">
+	This is an invalid email.
+</small>
+{%- endif -%}
+{% endmacro %}
+
+{% macro email_with_variable(email, input_check_dic) %}
+{%- if input_check_dic["email"] != "" -%}
+<small class="text-danger">
+	ERROR email: {{ email }}
+</small>
+{{ email_error(input_check_dic) }}
+<br>
+{%- endif -%}
+{% endmacro %}

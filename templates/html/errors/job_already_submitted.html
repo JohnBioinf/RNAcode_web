@@ -1,0 +1,9 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+<div class="container text-center m-2">
+	<h3>Submssion {{ job_id }} was already submitted. You can</h3>
+  <h3 title="New submission"><a href="{{ url_for('single_submission_fresh') }}">make a new submission,</a></h3>
+	<h3>or</h3>
+	<h3 title="Check submission"><a href="{{ url_for('submission_by_url', job_id=job_id) }}">check the job {{ job_id }}.</a></h3>
+</div>
+{% endblock %}

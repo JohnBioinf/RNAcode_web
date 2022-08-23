@@ -1,0 +1,34 @@
+{%- if bulk_check_dic["no_file"] != "" -%}
+<small class="text-danger">
+	{{ bulk_check_dic["no_file"] }}
+</small>
+{%- elif bulk_check_dic["json_formatting"] != "" -%}
+<small class="text-danger">
+	The provided .json file was not well formatted: {{ bulk_check_dic["json_formatting"] }}
+</small>
+{%- elif bulk_check_dic["num_job"] != "" -%}
+<small class="text-danger">
+	You can not submit more than {{ bulk_check_dic["num_job"] }}
+</small>
+{%- else -%}
+{%- if bulk_check_dic["dic"] != [] -%}
+<small class="text-danger">
+	{{ bulk_check_dic["dic"]|join(" <br> ")|safe }}
+</small>
+{%- endif -%}
+{%- if bulk_check_dic["keys"] != [] -%}
+<small class="text-danger">
+	{{ bulk_check_dic["keys"]|join(" <br> ")|safe }}
+</small>
+{%- endif -%}
+{%- if bulk_check_dic["values"] != [] -%}
+<small class="text-danger">
+	{{ bulk_check_dic["values"]|join(" <br> ")|safe }}
+</small>
+{%- endif -%}
+{%- if bulk_check_dic["job_ids"] != [] -%}
+<small class="text-danger">
+	{{ bulk_check_dic["job_ids"] }}
+</small>
+{%- endif -%}
+{%- endif -%}

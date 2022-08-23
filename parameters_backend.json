@@ -1,0 +1,14 @@
+{
+	"work_dir": "",
+	"blast_db": "",
+	"python_env_backend_path": "",
+	"python_env_seqSel_path": "",
+	"RNAcode_web_repo_backend": "",
+	"blast_bin": "",
+	"clustal_bin": "",
+	"RNAcode_bin": "",
+	"user": "",
+	"machine_name": "",
+	"entrez_bin": "",
+	"PATH": ""
+}

@@ -1,0 +1,14 @@
+{
+	"ip": "",
+	"user_dev": "",
+	"user_production": "",
+	"python_env_path": "",
+  "user_bin_path": "",
+	"production_dir": "",
+	"smtp_server": "",
+	"rnacode_email_address": "",
+	"admin_email_address": "",
+	"port": "",
+	"uni_net_space": "",
+	"R_bin": ""
+}

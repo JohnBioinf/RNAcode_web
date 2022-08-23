@@ -1,0 +1,113 @@
+<div class="card card-body my-3">
+	<div class="row mb-4">
+		<h3 class="text-center">Coding Regions.</h3>
+	</div>
+	{% if protein_list|length == 0 %}
+	<div class="row">
+		<h4>No coding regions found with this filter criteria.</h4>
+	</div>
+	{% else %}
+	<!-- Segment plot -->
+	<div class="my-2">
+		<h4>High Scoring Segment plot</h4>
+		<p>Distribution of HSS in the input sequence</p>
+		<div class="row justify-content-center">
+			<div class="col-md-11 col-lg-9 col-xl-7 justify-content-center">
+				<img style="height: 100%; width: 100%; object-fit: contain" src="{{ url_for('result_file', file_name=job_id + '_HSS_segment.svg')}}" alt="HSS Segment Plot">
+			</div>
+		</div>
+	</div>
+	<!-- Filter form -->
+	<div class="row my-2">
+		<h4 class="text-end">Filter regions</h4>
+		<form action="{{ url_for('submission_by_url', job_id=job_id) }}" method="post" enctype="multipart/form-data" autocomplete="off">
+			<div class="row justify-content-end">
+				<div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 text-end my-2">
+					<div class="input-group">
+						<input type="text" name="p_threshold" value="{{ p_threshold }}" 
+						{% if p_threshold_error != "" %}
+							class="form-control is-invalid">
+						{% else %}
+							class="form-control">
+						{% endif %}
+						<span class="input-group-text">p-val</span>
+					</div>
+				</div>
+			</div>
+			<div class="row justify-content-end">
+				<div class="col-xl-6 col-lg-7 col-md-9 text-end">
+				{%- if best_overlap -%}
+					<input style="width:22px; height:22px" class="form-check-input my-2 mx-1" type="checkbox" value="" name="best_overlap" checked="">
+				{%- else -%}
+					<input style="width:22px; height:22px" class="form-check-input my-2 mx-1" type="checkbox" value="" name="best_overlap">
+				{%- endif -%}
+					<label class="form-check-label my-2 mx-1" for="best_overlap">
+						If segments overlap only show best.
+					</label>
+				</div>
+			</div>
+			<div class="row justify-content-end">
+				<div class="col-xl-5 col-lg-6 col-md-7 col-sm-8 text-end my-2">
+					<button type="submit" class="btn btn-primary">Filter</button>
+				</div>
+			</div>
+			<div class="row justify-content-end">
+				<div class="col-xl-5 col-lg-6 col-md-7 col-sm-8 text-end">
+				{%- if p_threshold_error == "Not float" -%}
+				<small class="text-danger">
+					Only numbers!
+				</small>
+				{%- elif p_threshold_error == "To high" -%}
+				<small class="text-danger">
+					Must be below {{ P_THRESHOLD }}!
+				</small>
+				{%- elif p_threshold_error == "Negativ" -%}
+				<small class="text-danger">
+					Must be higher than 0!
+				</small>
+				{%- endif -%}
+				<small class="form-text text-muted">
+					Select the result by p-value. Show only results which have a lower
+					p-value than provided. Must be above 0 and below {{ P_THRESHOLD }}.
+				</small>
+				<small class="form-text text-muted">
+					Check the box if you wish to see only the best segment in a group of
+					multiple overlaping segments. Often a strong conservation signal can
+					be observed as a shadow on the opposite strand.
+				</small>
+			</div>
+			</div>
+		</form>
+	</div>
+	<!-- Hss table -->
+	{% include "html/results/hss_table.html" %}
+	<!-- Protein list -->
+	<div class="row mt-4 mb-2">
+		<h4>Predicted protein sequence 
+			<a class="btn btn-primary btn-sm" role="button" href="{{ url_for('get_protein_fasta', job_id=job_id, p_threshold=p_threshold, best_overlap=best_overlap) }}">
+				Download sequences as fasta
+			</a>
+		</h4>
+	</div>
+	<div class="flow-block row m-2 overflow-auto">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col">HSS id</th>
+					<th scope="col">Sequence</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for protein in protein_list %}
+				<tr>
+					<td>{{loop.index}}</td>
+					<td>{{protein[0]}}</td>
+					<td style="font-family: DejaVu Sans Mono" class="text-break">{{protein[1]}}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% endif %}
+</div>

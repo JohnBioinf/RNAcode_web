@@ -1,0 +1,34 @@
+<h4>Input Sequence</h4>
+<div>
+	<label for="Input Sequence">Paste input sequence here or</label>
+	<textarea style="font-family: DejaVu Sans Mono" name="input_seq_nuc" id="input_sequence" rows="5"
+	{%- if input_check_dic["input_seq_nuc"] != "" -%}
+		class="form-control is-invalid"
+	{%- else -%}
+		class="form-control"
+	{%- endif -%}
+		placeholder=
+	{%- if input_seq_nuc == "" -%}
+		"ACGT"></textarea>
+	{%- else -%}
+		"">{{ input_seq_nuc }}</textarea>
+	{%- endif -%}
+	<small class="form-text text-muted">
+		Input nucleotide Sequence. Genomic region which should be analysed.<br>
+	</small>
+</div>
+{{ parameter_check.input_seq_nuc_error(input_check_dic) }}
+<!-- Upload file -->
+<div>
+	<label for="formFile" class="form-label">Upload fasta file here.</label>
+	<input class="form-control" type="file" name="fasta" id="formFile">
+	{%- if input_check_dic["input_fasta"] == "Multi fasta" -%}
+	<small class="text-danger">
+		The input file contains multiple sequences.
+	</small>
+	{%- elif input_check_dic["input_fasta"] == "Invalid fasta" -%}
+	<small class="text-danger">
+		The input file is not a valid fasta file.
+	</small>
+	{%- endif -%}
+</div>

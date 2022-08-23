@@ -1,0 +1,437 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col-sm-12 col-md-11 col-lg-10 col-xl-8">
+		<h1 class="text-center p-2">Documentation</h1>
+
+		<h3>Table of content</h3>
+		<div class="m-3">
+			<ol class="m-3">
+				<a class="link-dark" href="#intro"><li>Introduction</li></a>
+				<a class="link-dark" href="#principle"><li>Principle of RNAcode</li></a>
+				<a class="link-dark" href="#workflow"><li>Workflow</li></a>
+				<a class="link-dark" href="#usecases"><li>Use cases</li></a>
+				<a class="link-dark" href="#splitting"><li>Job splitting and parallelization</li></a>
+				<a class="link-dark" href="#parameters"><li>Parameters</li></a>
+				<a class="link-dark" href="#results"><li>Results</li></a>
+				<a class="link-dark" href="#reference"><li>Reference</li></a>
+				<a class="link-dark" href="#software"><li>Software</li></a>
+				<a class="link-dark" href="#citing"><li>Citing</li></a>
+			</ol>
+		</div>
+
+		<h3 id="intro">Introduction</h3>
+		<div class="m-3">
+			<p>Welcome to RNAcode Web, a free web server for the prediction of protein
+			coding regions.<br>
+			The web service uses
+			<a href="https://github.com/ViennaRNA/RNAcode">RNAcode</a>
+			as its core utility to determine the coding potential of a nucleotide
+			sequence. While RNAcode can be used to build complete annotations based on
+			a full genome alignment, the web service aims for the prediction of
+			smaller genomic regions of interest. Biggest disadvantage of larger input
+			is the presentation of the results, which will become eventually
+			confusing. Hence genomic regions which span many genes are inadvisable,
+			while technically possible.<br>
+			RNAcode performs rigors statistic analysis of the evolutionary information
+			provided by a sequence alignment. The web service builds this sequence
+			alignment fully automatically and uses RNAcode to analyse it. The user
+			only needs to provide the region as a nucleotide sequence. The web
+			service uses the blast search engine to find homologous sequences from the
+			RefSeq DB "Representative Genome Database" or the nt DB "non redundant
+			nucleotide Database" chosen by the user. From the results the web service
+			selects a set of sequences that provide a robust evolutionary signal. This
+			set is used to compute a multiple sequence alignment on which RNAcode
+			generates an analysis.<br>
+			For the analysis the assumption is made that the user provides a genomic
+			region as input. Hence the web service will not work with spliced regions
+			or RNA sequences.<br>
+			Further the web service ignores paralogs, thus will only allow one
+			homolog per species.</p>
+		</div>
+
+		<h3 id="principle">Principle of RNAcode</h3>
+		<div class="m-3">
+			<p>In principle the RNAcode is nothing else than an annotation tool for
+			protein genes. Annotation tools can be roughly classified into three
+			categories: feature-based methods (e.g.
+			<a href="http://ccb.jhu.edu/software/glimmer/index.shtml">glimmer</a>,
+			<a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-11-119">prodigal</a>),
+			homology based methods (e.g. <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi">blast</a>),
+			alignment based methods (RNAcode).<br>
+			Compared with the feature-based and homology based methods the alignment
+			based annotation has some advantages and disadvantages. On the downside is
+			a comparable longer computation time, especially the construction of the
+			alignment. On the upside the method does not need any <em>a priori</em>
+			information. A homology based annotation needs a protein data base and the
+			feature-based method needs one or more annotated genomes from which it can
+			learn its features. The alignment based annotation on the other hand only
+			needs observed sequences (assembled genomes with no annotation). This is
+			in so far an advantage as both other methods are highly biased towards
+			known proteins. While RNAcode has no such bias and thus is well suited to
+			predict unknown protein sequences with unusual features.<br>
+			Further the result of an alignment based annotation brings by itself
+			biological evidence of the protein coding potential of a sequence. As the
+			analysis tries to find negative evolutionary selection to conserve a
+			protein sequence. Which in itself is evidence coding potential.  Compared
+			with a feature based annotation which only provides evidence in so far
+			that a called gene has features similar to other known genes.<br>
+			Thus alignment based method shines for specific regions of interest which
+			only find weak or no signal by other methods. In particular for organisms
+			which are phylogenetically distant to many model organism or show
+			uncharacteristic genomic organisation.<br>
+			The starting point of alignment based methods is a nucleotide alignment.
+			This alignment is analysed to find evidence for negative selection on the
+			underlying protein sequence. Hence certain mutations are much rare than
+			expected. Silent mutations are a straightforward example. Alignments which
+			only show mutations which do not change the amino acid sequence can be
+			expected to be protein coding. Other mutations which only change the amino
+			acid but to are biochemically similar (like leucin and isoleucin) are
+			called synonymous mutation and also provide evidence about the coding
+			potential. Next to these mutation RNAcode evaluates reading frame
+			conservation and stop codons.
+			</p>
+		</div>
+
+		<h3 id="workflow">Workflow</h3>
+		<div class="m-3">
+			<p>RNAcode Web runs 4 major steps. While step 1. and 2. might be repeated
+			until enough sequence could be found.</p>
+			<ol class="m-3">
+				<li>Blast</li>
+				<li>Sequence Selection</li>
+				<li>Alignments</li>
+				<li>RNAcode</li>
+			</ol>
+
+			<h5>1. Blast</h5>
+
+			<p>In the first step the full input sequence will be blasted against the
+			local RefSeq or nt data base.</p>
+
+			<h5>2. Sequence selection</h5>
+
+			<p>In the next step the sequences in the blast result will be selected to
+			build the alignment. Further the sequences of the blast results will be
+			extended, such that it covers the complete input sequence. This is needed
+			as most blast results do not cover the entire query sequence.</p>
+
+			<h5>Repeat 1. and 2.</h5>
+
+			<p>The two first steps will be repeated up to 5times and will stop earlier
+			if enough sequences are found. The first hit that blast finds will be set
+			as a reference for the rest of the search. In the following iterations the
+			search will than be taxonomically restricted based on this reference. In
+			the second iteration only sequences belonging to the same order will
+			considered, in the third only from the same class, than phylum and lastly
+			kingdom. These restrictions speed up the blast search.<br>
+			To increase the sensitivity, after each iteration the word size for the
+			blast size will be decreased.<br>
+			The decrease of word size in combination with the taxonomic restriction
+			should a sure quick processing for input sequences which have easy to find
+			homologs, while guarantying enough sensitivity for input sequences, where
+			this in not the case.</p>
+
+			<h5>3. Alignment</h5>
+
+			<p>After the selection of sequences from the blast result. The sequences
+			will be aligned, with
+			<a class="link-dark" href="http://www.clustal.org/omega/">Clustal Omega.</a>
+			</p>
+
+			<h5>4. RNAcode</h5>
+			<p>In the last step the alignment will be used as an input for RNAcode.
+			Which will make a prediction for protein coding regions.</p>
+
+		</div>
+
+		<h3 id="usecases">Use cases</h3>
+		<div class="m-3">
+			<p>There are a couple of use cases for which RNAcode Web can help. It can
+			be used to validate and/ or find protein coding regions.</p>
+			<p>For example a genomic region shows evidence of translation and the user
+			wants evolutionary proof that the region is truly coding. In this case the
+			user simply provides the genomic region as a nucleotide sequence. </p>
+			<p>Further a larger stretch on the genome might be of interest, but no
+			clear region or exon structure could be established. In this case the
+			stretch can be used as an input and RNAcode will try to identify which
+			frames are likely coding.</p>
+		</div>
+
+		<h3 id="splitting">Job splitting and parallelization</h3>
+		<div class="m-3">
+			<p>For long input regions the sequence is split into multiple overlapping
+			smaller sequence. For each sequence an independent job is started.</p>
+			<p>Each of this jobs gets the numbered suffix "-child_n". On the webpage
+			for the parent job information and results of the children will be
+			aggregated. If results in child jobs overlap they will be merged.<br>
+			If a job is split up into more than 3 child jobs, a custom blast data base
+			is constructed based on the input sequence. The custom data base is
+			constructed from the original NCBI data base but only contains parts of
+			homologous sequences. This decreases the time for
+			each child process dramatically.</p>
+			<p>The procedure is closely related to the work-flow of a normal job. Blast
+			searches and sequence selections will be done in possibly multiple
+			iterations. The blast searches will decrease the word size in every
+			iteration. While once a reference is found (this should be normally the
+			case after the first search) a taxonomic restriciton is imposed on the
+			search. This taxonomic restriction is relaxed every following iteration.
+			In the sequence selection step the extension of the target sequence is
+			increased to include varying exon distances and gene synteny.</p>
+		</div>
+
+		<h3 id="parameters">Parameters</h3>
+		<div class="m-3">
+			<p>The three parameters relevant for the pipeline are:</p>
+			<ol>
+				<li class="text-info">Maximal pairwise distance</li>
+				<li class="text-info">Minimal pairwise distance</li>
+				<li class="text-info">Data base type</li>
+			</ol>
+			<p>The data base parameter sets the nucleotide data base on which the
+			analysis is based.</p>
+			<h5>Distance</h5>
+			<p>The distance parameters that the user can set for a job,
+			are used in the second step, sequence selection. In this step the
+			sequences retrieved by blast are selected, to build an optimal set for the
+			alignment. Thus we explain in detail the steps of the sequence selection
+			and highlight when each parameter is used.</p>
+			<p>The user provides the web service with an upper and lower bound of
+			distance between the sequences in the alignment set. While the minimal
+			pairwise distance is the minimal distance between any two sequences in the
+			set of selected sequences. The maximal pairwise distance only applys
+			between any sequence and the input sequence.<br>
+			The distance is computed by building a local alignment between
+			two sequences using the following scoring scheme:</p>
+			<ul>
+				<li>Match: +1</li>
+				<li>Mismatch: -1</li>
+				<li>Open gap: -1</li>
+				<li>Extend gap:-1</li>
+			</ul>
+			<p>From this alignment the distance is defined as:
+			$$dist = 1 - { { \# matches} \over length(shorter\_sequence)} * 100$$
+			</p>
+			<p>The selection runs through multiple steps.</p>
+			<ol>
+				<li>All results are removed that are to close to the input sequence,
+					based on the <span class="text-info">minimal pairwise
+						distance</span>.</li>
+				<li>All results are removed that are to far away from the input
+					sequence, based on the <span class="text-info">maximal pairwise distance</span>.</li>
+				<li>A density-based clustering algorithm is used to remove sequences
+					such that no two sequence in the set have a pairwise distance below
+					the <span class="text-info">minimal pairwise distance</span></li>
+			</ol>
+
+			<h5>Query Information</h5>
+			<p>Here the user can provide an email address which will receive a
+			notification when the job ended.<br>
+			Also a unique name for the job must be provided. This name is used to
+			identify the job, by the web service and the user.</p>
+		</div>
+
+		<h3 id="results">Results</h3>
+		<div class="m-3">
+			<p>The web service provides a couple of representations of the RNAcode
+			results if the job finished successfully. The results can be separated into
+			alignment results and RNAcode results. If RNAcode did not find any
+			significant coding region only the alignment results are shown. If no
+			alignment could be constructed no results are shown. In both cases the job
+			is considered a failure.</p>
+		</div>
+
+		<h4>Coding Regions</h4>
+
+		<div class="m-3">
+			<h5>High Scoring Segment plot</h5>
+			<p>For each result set a plot with the High Scoring Segments (HSS) is
+			generated. The segments are drawn as arrows with there frame decoded in
+			different colors. The name of the HSS is are drawn next to the arrows. If
+			the job was split up into different child processes, you can see which
+			part corresponds with which child at the bottom.</p>
+			<div class="row mb-4 justify-content-center">
+				<div class="col-8">
+					<img src="{{ url_for('static', filename='HSS_segment_example.svg')}}" class="w-100" alt="HSS Segment Plot">
+					<small class="text-center">Example of a high scoring segment plot.</small>
+				</div>
+			</div>
+
+			<h5>High Scoring Segment tabele</h5>
+			<p>The main result of the web service is a table, showing each segment
+			that has coding potential. Each row shows one potential coding region. The
+			table has 11. fields, which are described here. Multiple HSS can be merged
+			into one if different child process have an overlapping segment in the
+			same frame.</p>
+			<div>
+				<dl>
+					<dt>1. HSS id</dt>
+					<dd>Unique running number for each high scoring segment predicted in
+					one RNAcode call.</dd>
+					<dt>2. Strand</dt>
+					<dd>The strand of segment. Minus indicates that the predicted region
+					is on the reverse complement strand.<dd>
+					<dt>3. Frame</dt>
+					<dd>The reading frame phasing relative to the starting nucleotide
+					position in the reference sequence. 1 means that the first nucleotide
+					in the reference sequence is in the same frame as the predicted
+					coding region.</dd>
+					<dt>4. Length</dt>
+					<dd>The length of the predicted region in amino acids</dd>
+					<dt>7. Start <br>8. End</dt>
+					<dd>The nucleotide position in the reference sequence of the
+					predicted coding region. The first nucleotide position in the
+					references sequence is set to 1.</dd>
+					<dt>9. Score</dt>
+					<dd>The coding potential score. High scores indicate high coding
+					potential.</dd>
+					<dt>10. P</dt>
+					<dd>The p-value associated with the score. This is the probability
+					that a random segment with same properties contains an equally good
+					or better hit.</dd>
+					<dt>11. Show Results</dt>
+					<dd>Plot of the high scoring segment.</dd>
+				</dl>
+			</div>
+			<h5>Predicted protein sequence</h5>
+			<p>A protein list is shown for each HSS. The list can be downloaded as a
+			fasta file.</p>
+			<h5>Filter regions</h5>
+			<p>The results can be filtered by the p-value and that only the best
+			scoring segments should be shown if they overlap with others.<br>
+			The results will be than update accordingly. Often high scoring segments
+			show a statical "shadow" on the opposite strand. That is due to a region
+			that overlaps a coding region is not independent in there codon
+			distribution. Normally these segments score worse than the correct region.
+			Also while some examples are known it is unusual that two coding regions
+			overlap and are in different frames.</p>
+		</div>
+		<h4>Alignment Info</h4>
+		<div class="m-3">
+			<p>The results show information about the input alignment for RNAcode,
+			even if no coding regions could be predicted.<br>
+			If the job was split into multiple child process a table with simple
+			alignment information for each child is shown. Consisting of the child id,
+			number of sequences in the alignment, names of species in the alignment and
+			if RNAcode was successful.<br>
+			If the job was not split an alignment tree and the full alignment are
+			shown.</p>
+			<h5>Alignment Tree</h5>
+			<p>For jobs which were not split a phylogenetic tree is shown which was
+			the alignment guide tree for Clustal Omega. The tree was build by Clustal
+			Omega it self.</p>
+		</div>
+			<h4>Download full results</h4>
+		<div class="m-3">
+			<p>Further the user might download the folder containing all results
+			which were created for the analysis. This includes the necessary scripts
+			to reproduce the calculation and all intermediate results.</p>
+		</div>
+
+		<h3 id="reference">Reference</h3>
+		<div class="m-3">
+				<dl>
+					<dt>Blast</dt>
+					<dd><a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi">Website</a><br>
+					Altschul, S. F., Gish, W., Miller, W., Myers, E. W., & Lipman, D. J.
+					(1990).<br>
+					Basic local alignment search tool.<br>
+					Journal of molecular biology, 215(3), 403–410.<br>
+					<a href="https://doi.org/10.1016/S0022-2836(05)80360-2">
+						https://doi.org/10.1016/S0022-2836(05)80360-2</a>
+					</dd>
+					<dt>Clustal Omega</dt>
+					<dd><a href="http://www.clustal.org/omega/">Website</a><br>
+					Sievers F., Wilm A., Dineen D., Gibson T.J., Karplus K., Li W., Lopez
+					R., McWilliam H., Remmert M., Söding J., Thompson J.D. and Higgins
+					D.G. (2011)<br>
+					Fast, scalable generation of high-quality protein multiple sequence
+					alignments using Clustal Omega.<br>
+					Mol. Syst. Biol. 7:539<br>
+					<a href="https://doi.org/10.1038/msb.2011.75">
+						https://doi.org/10.1038/msb.2011.75</a>
+					</dd>
+					<dt>RNAcode</dt>
+					<dd><a href="https://github.com/ViennaRNA/RNAcode">Website</a><br>
+					Washietl S, Findeiss S, Müller SA, Kalkhof S, von Bergen M, Hofacker
+					IL, Stadler PF, Goldman N.<br>
+					RNAcode: robust discrimination of coding and noncoding regions in
+					comparative sequence data.<br>
+					RNA. 2011 Apr;17(4):578-94.<br>
+					<a href="https://doi.org/10.1261/rna.2536111">
+						https://doi.org/10.1261/rna.2536111</a>
+					</dd>
+				</dl>
+		</div>
+
+		<h3 id="software">Software</h3>
+		<div class="m-3">
+				<dl>
+					<dt>Blast</dt>
+					<dd>version: 2.13.0+
+          <a href="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.13.0/">
+						https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.13.0/</a>
+					</dd>
+					<dt>Clustal Omega</dt>
+					<dd>version: 1.2.4
+					<a href="http://www.clustal.org/omega/">
+						http://www.clustal.org/omega/</a><br>
+					</dd>
+					<dt>RNAcode</dt>
+					<dd>version: 0.3
+					<a href="https://github.com/ViennaRNA/RNAcode">
+						https://github.com/ViennaRNA/RNAcode</a><br>
+					</dd>
+					<dt>R</dt>
+					<dd>version 4.1.1
+					<a href="https://cran.r-project.org/src/base/R-4/">
+						https://cran.r-project.org/src/base/R-4/</a><br>
+					</dd>
+					<dd>ggplot2</dd>
+					<dd>version: 3.3.5</dd>
+					<dd>ggrepel</dd>
+					<dd>version: 3.3.5</dd>
+					<dt>python (webserver)</dt>
+					<dd>version:3.6.8
+					<a href="https://www.python.org/downloads/release/python-368">
+						https://www.python.org/downloads/release/python-368</a><br>
+					</dd>
+					<div class="m-3">
+						<dt>filelock</dt>
+						<dd>version:3.4.1</dd>
+						<dt>coolname</dt>
+						<dd>version:1.1.0</dd>
+						<dt>validate_email</dt>
+						<dd>version:1.3</dd>
+						<dt>flask_limiter</dt>
+						<dd>version:1.5</dd>
+						<dt>apscheduler</dt>
+						<dd>version:3.9.1</dd>
+						<dt>ete3</dt>
+						<dd>version:3.1.2</dd>
+						<dt>jinja2</dt>
+						<dd>version:3.0.3</dd>
+						<dt>Bio</dt>
+						<dd>version:1.79</dd>
+					</div>
+					<dt>python (cluster)</dt>
+					<dd>version:3.7.7
+					<a href="https://www.python.org/downloads/release/python-377">
+					https://www.python.org/downloads/release/python-377</a><br>
+					</dd>
+					<div class="m-3">
+					  <dt>ete3</dt>
+					  <dd>version:3.1.2</dd>
+					  <dt>Bio</dt>
+					  <dd>version:1.78</dd>
+					</div>
+				</dl>
+		</div>
+
+		<h3 id="citing">Citing</h3>
+		<div class="m-3">
+			<p>TODO Publish or Perish</p>
+		</div>
+	</div>
+</div>
+{% endblock	%}

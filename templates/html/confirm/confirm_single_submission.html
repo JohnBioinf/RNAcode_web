@@ -1,0 +1,26 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+<div class="row">
+	<h1 class="text-center">Input Parameters</h1>
+</div>
+{% include "html/confirm/information_splitting.html" %}
+{% include "html/confirm/display_input_parameters.html" %}
+<div class="row p-2 mt-4 justify-content-center">
+	<form action="/submission/{{ job_id }}" method="post">
+		<div class="col text-center">
+			<input type="submit" class="btn btn-primary mt-2" value="Submit">
+		</div>
+	</form>
+	<div class="col-sm-8 col-md-6 col-xl-3 text-center">
+		<p class="m-0">Be aware that the computation will take something between one to eight
+		hours!</p>
+	</div>
+</div>
+<div class="row p-2 justify-content-center">
+	<form action="/change_submission/{{ job_id }}" method="post">
+		<div class="col text-center">
+			<input type="submit" class="btn btn-primary mt-2" value="Make changes to submission">
+		</div>
+	</form>
+</div>
+{% endblock %}

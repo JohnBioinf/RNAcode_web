@@ -1,0 +1,52 @@
+<div class="card card-body my-3">
+	<div class="row mb-4">
+		<h3 class="text-center">Alignment Info</h3>
+	</div>
+{%- if job_hierarchy == "parent" -%}
+	<div class="flow-block row m-2 overflow-auto">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">Child</th>
+					<th scope="col">Size of alignment</th>
+					<th scope="col">Sequence list</th>
+					<th scope="col">RNAcode results</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for line in alig_info_table %}
+				<tr>
+					<td>{{line[0]}}</td>
+					<td>{{line[1]}}</td>
+					<td>{{line[2]}}</td>
+				{% if line[3] == "CD"%}
+					<td><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"></td>
+				{% else %}
+					<td><img src="{{ url_for('static', filename='failure.svg')}}" width="20" height="20"></td>
+				{% endif %}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{%- else -%}
+	<div class="row">
+		<h4>Alignment Tree</h4>
+	</div>
+	<div class="row">
+		<div class="col-3">
+		</div>
+		<div class="col">
+			<img src="{{ url_for('result_file', file_name=job_id + '_align.svg')}}" class="img-fluid" alt="Alignment Tree">
+		</div>
+		<div class="col-3">
+		</div>
+	</div>
+	<div class="row">
+		<h4>Full Alignment</h4>
+	</div>
+	<div class="table-responsive">
+	{{ alignment_print|safe }}
+	</div>
+{%- endif -%}
+</div>

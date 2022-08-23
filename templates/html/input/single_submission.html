@@ -1,0 +1,45 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+{% import 'html/input/parameter_check.html' as parameter_check %}
+<div class="row mb-2">
+	<h1 class="text-center">Submit Sequence</h1>
+	<div class="col mx-5 my-2">
+		<p>Not sure what you can get out of this? Have a quick look at some examples: The human gene
+		<a href="{{ url_for('submission_by_url', job_id="PLCH2_human_refseq") }}">
+			PLCH2</a> (phosphodiesterase),
+		<a href="{{ url_for('submission_by_url', job_id="BU113648_chicken") }}">
+			BU113648</a> found in chicken or the
+		<a href="{{ url_for('submission_by_url', job_id="Spike_protein_Covid") }}">
+			spike protein 2</a> from the SARS coronavirus.</p>
+	</div>
+</div>
+<form action="{{ url_for('single_submission_fresh') }}" method="post" enctype="multipart/form-data" autocomplete="off">
+	<div class="row my-3">
+		<!-- Input Sequence -->
+		{% include "html/input/input_sequence.html" %}
+	</div>
+	<div class="row my-3">
+		<!-- Blast data base -->
+		{% include "html/input/data_base_type.html" %}
+	</div>
+	<div class="row my-3">
+		<!-- Selection Arguments -->
+		<h4>Selection Parameters</h4>
+	</div>
+	<div class="row my-3">
+		<!-- Distance parameters -->
+		{% include "html/input/distance_parameters.html" %}
+	</div>
+	<div class="row my-3">
+		<!-- Query Information -->
+		{% include "html/input/query_parameters.html" %}
+	</div>
+	<div class="row my-4 justify-content-center">
+		<div class="col-5 mt-4 text-center">
+			<div class="d-grid gap-2">
+				<input type="submit" class="btn btn-primary btn-block" value="Check Query">
+			</div>
+		</div>
+	</div>
+</form>
+{% endblock %}

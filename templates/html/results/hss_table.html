@@ -1,0 +1,54 @@
+<div class="row my-2">
+	<h4>Result Table</h4>
+</div>
+<div class="flow-block row mb-4 m-2 overflow-auto">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col"></th>
+				<th scope="col">HSS id</th>
+				<th scope="col">Strand</th>
+				<th scope="col">Frame</th>
+				<th scope="col">Length</th>
+				<th scope="col">Start</th>
+				<th scope="col">End</th>
+				<th scope="col">Score</th>
+				<th scope="col">P</th>
+				<th scope="col">Show Result</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for line in hss_table %}
+			{%- set hss_id = line[0]|replace("-", ", <br> ") %}
+			<tr>
+				<td>{{loop.index}}</td>
+			{% if line[1] == "+" and line[2] == "1" %}
+			<td scope="row" style="background-color:rgb(04, 252, 0, 0.6)">{{hss_id|safe}}</td>
+			{% elif line[1] == "+" and line[2] == "2" %}
+			<td scope="row" style="background-color:rgb(65, 105, 225, 0.6)">{{hss_id|safe}}</td>
+			{% elif line[1] == "+" and line[2] == "3" %}
+			<td scope="row" style="background-color:rgb(205, 0, 0, 0.6)">{{hss_id|safe}}</td>
+			{% elif line[1] == "-" and line[2] == "1" %}
+			<td scope="row" style="background-color:rgb(160, 32, 240, 0.6)">{{hss_id|safe}}</td>
+			{% elif line[1] == "-" and line[2] == "2" %}
+			<td scope="row" style="background-color:rgb(255, 165, 0, 0.6)">{{hss_id|safe}}</td>
+			{% elif line[1] == "-" and line[2] == "3" %}
+			<td scope="row" style="background-color:rgb(64, 224, 208, 0.6)">{{hss_id|safe}}</td>
+			{% endif %}
+				<td>{{line[1]}}</td>
+				<td>{{line[2]}}</td>
+				<td>{{line[3]}}</td>
+				<td>{{line[7]}}</td>
+				<td>{{line[8]}}</td>
+				<td>{{line[9]}}</td>
+				<td>{{line[10]}}</td>
+				<td>
+				{% for plot_file in line[11] %}
+				<a href="{{ url_for('static', filename=plot_file)}}" class="link-dark">Plot</a><br>
+				{% endfor %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

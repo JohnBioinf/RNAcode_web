@@ -1,0 +1,50 @@
+<h4>Query Information</h4>
+<div class="col">
+	<label for="email_notification">Email</label>
+	<div class="form-check mb-1">
+		{%- if email_notification -%}
+		<input class="form-check-input" type="checkbox" data-bs-toggle="collapse" data-bs-target="#collapsediv1" name="email_notification" value="1" id="email_notification" checked="">
+		{%- else -%}
+		<input class="form-check-input" type="checkbox" data-bs-toggle="collapse" data-bs-target="#collapsediv1" name="email_notification" value="1" id="email_notification">
+		{%- endif -%}
+		<label class="form-check-label" for="email_notification">
+		  Send notification when submission finished.
+		</label>
+	</div>
+	{%- if email_notification -%}
+	<div id='collapsediv1' class='collapse div1 show'>
+	{%- else -%}
+	<div id='collapsediv1' class='collapse div1'>
+	{%- endif -%}
+	<input type="text" name="email" id="email" class=
+	{%- if input_check_dic["email"] != "" -%}
+		"form-control is-invalid"
+	{%- else -%}
+		"form-control"
+	{%- endif -%}
+	{%- if email == "" -%}
+		placeholder="john.doe@famous.uni-bigcity.org">
+	{%- else -%}
+		value="{{ email }}">
+	{%- endif -%}
+	<small class="form-text text-muted">
+		Email address which will be notified when job finished.
+	</small>
+{{ parameter_check.email_error(input_check_dic) }}
+	</div>
+</div>
+<div class="col">
+	<!-- Spacer for label in email -->
+	<label for="Strand">Job Name</label>
+	<div class="mb-1"><label for="Strand"></label></div>
+	<input type="text" name="job_id" id="job_id" class=
+	{%- if input_check_dic["job_id"] != "" -%}
+		"form-control is-invalid" value="{{ invalid_job_id }}">
+	{%- else -%}
+		"form-control" value="{{ job_id }}">
+	{%- endif -%}
+	<small class="form-text text-muted">
+		Identifier for your submission. Only letters, numbers, "-" and "_".
+	</small>
+{{ parameter_check.job_id_error(input_check_dic) }}
+</div>

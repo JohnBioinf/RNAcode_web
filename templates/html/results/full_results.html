@@ -1,0 +1,134 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+<div class="ms-4">
+	<!-- status summary -->
+	<div class="row my-2">
+		<h1 class="text-center">Job</h1>
+		<h1 class="text-center text-break">{{ job_id | replace("_", "_<wbr>") | safe }}</h1>
+		<h2 class="text-center">Submission Status: 
+		{% if status == "R" %}
+		Running</h2>
+		{% elif status == "E" %}
+		Error!</h2>
+		{% elif status == "F" %}
+		No Result!</h2>
+		{% elif status == "CD" %}
+		Success!</h2>
+		{% endif %}
+		<div class="text-center mb-5">
+			{% if status == "R" %}
+			<p><img src="{{ url_for('static', filename='refresh.svg')}}" width="80" height="80"></p>
+			{% elif status == "E" %}
+			<p><img src="{{ url_for('static', filename='exclamation.svg')}}" width="80" height="80"></p>
+			{% elif status == "F" %}
+			<p><img src="{{ url_for('static', filename='failure.svg')}}" width="80" height="80"></p>
+			{% elif status == "CD" %}
+			<p><img src="{{ url_for('static', filename='check-box.svg')}}" width="80" height="80"></p>
+			{% endif %}
+			{% if status == "E" %}
+				{% if fail_reason == "time" %}
+				<p class="text-danger">The job was running to long.</p>
+				{% elif fail_reason == "mem" %}
+				<p class="text-danger">The job did use to much memory.</p>
+				{% elif fail_reason == "pipe_broken" %}
+				<p class="text-danger">Internal error please contact the maintainer.</p>
+				{% endif %}
+			{% endif %}
+			{% if status == "F" %}
+				{% if fail_reason == "blast" %}
+				<p class="text-warning">
+					Not enough blast results. Expand region.
+				</p>
+				{% elif fail_reason == "selection" %}
+				<p class="text-warning">
+					Not enough sequence found with cut offs. Either expand region and/ or change
+					selection parameters.
+				</p>
+				{% elif fail_reason == "no_res" %}
+				<p class="text-warning">
+					RNAcode could not find significant results in the alignment.
+				</p>
+				{% endif %}
+			{% endif %}
+		</div>
+		<h3>Full Status
+		<button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#FullStatus" aria-expanded="false" aria-controls="FullStatus">
+			Show full status
+		</button>
+		</h3>
+		{% if status == "CD" %}
+		<div class="collapse" id="FullStatus">
+		{% else %}
+		<div class="collapse show" id="FullStatus">
+		{% endif %}
+			<div class="card card-body">
+				{%- if job_hierarchy == "parent" -%}
+				{% include "html/results/status_parent.html" %}
+				{%- else -%}
+				{% include "html/results/status_child_orphan.html" %}
+				{%- endif -%}
+			</div>
+		</div>
+	</div>
+</div>
+<div class="ms-4">
+	<!-- Input -->
+	<div class="row my-2">
+		<h3>Input
+		<button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#InputData" aria-expanded="false" aria-controls="InputData">
+			Toggle input
+		</button>
+		</h3>
+		<div class="collapse" id="InputData">
+			<div class="card card-body">
+		{% include "html/confirm/display_input_parameters.html" %}
+			</div>
+		</div>
+	</div>
+	<!-- Results -->
+	<div class="row my-2">
+		<h3>Results
+		{% if show_results %}
+		<button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#Results" aria-expanded="false" aria-controls="Results">
+			Toggle results
+		</button>
+		{% else %}
+		<button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#Results" aria-expanded="false" aria-controls="Results" disabled>
+			Toggle results
+		</button>
+		{% endif %}
+		</h3>
+		{% if show_results %}
+		<div class="collapse show" id="Results">
+		{% else %}
+		<div class="collapse" id="Results">
+		{% endif %}
+			{% if show_results %}
+			<!-- HSS details -->
+			{% if status == "CD" %}
+			{% include "html/results/hss_details.html" %}
+			{% endif %}
+			<!-- Alignment infos -->
+			{% include "html/results/alignment_infos.html" %}
+			{% else %}
+			<div class="card card-body">
+				<p>None</p>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	<div class="row my-2">
+		<h3>Download full results
+		{% if status in ["F", "CD"] %}
+		<a class="btn btn-primary btn-sm" role="button" href="{{ url_for('get_full_results', job_id=job_id) }}">
+			Download full results
+		</a>
+		{% else %}
+		<a class="btn btn-primary disabled btn-sm" aria-disabled="true" role="button" href="#">
+			Download full results
+		</a>
+		{% endif %}
+		</h3>
+	</div>
+</div>
+{% endblock %}

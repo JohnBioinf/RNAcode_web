@@ -1,0 +1,31 @@
+<h4>Blast data base</h4>
+{%- if db_type == "nt" -%}
+		{%- set select_nt = "selected" %}
+		{%- set select_refseq = "" %}
+{%- elif db_type == "refseq" -%}
+		{%- set select_nt = "" %}
+		{%- set select_refseq = "selected" %}
+{%- else  -%}
+		{%- set select_nt = "" %}
+		{%- set select_refseq = "" %}
+{%- endif -%}
+<div class="col-6">
+	<label for="db_type" class="form-label">Chose a data base.</label>
+	<select class="form-select" id="db_type" name="db_type">
+		<option {{ select_refseq }} value="refseq">RefSeq (reference genomes)</option>
+    <option {{ select_nt }} value="nt">nt (non-redundant nucleotide DB)</option>
+	</select>
+</div>
+<div class="col-6">
+	<small class="form-text text-muted">
+		Select which data base should be used to search. The RefSeq should be the
+		preferred one, only if insufficient results can be found the full NCBI nt data
+		base should be used.<br>
+		The RefSeq "Representative Genome Database" is a well curated data base which
+		only contains genomes, while the nt (non-redundant nucleotide) data base
+		contains nucleotide sequence from a variety of sources. The RNAcode analysis
+		is based on an alignment of genomic regions, hence the RefSeq	data base is
+		the preferable choice. Yet for some phylas the RefSeq	data base might be
+		sparse in such cases the nt data base should be chosen.
+	</small>
+</div>

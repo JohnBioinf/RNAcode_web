@@ -1,0 +1,42 @@
+<!-- min_pair_dist -->
+<div class="col">
+	<label for="min_pair_dist">min. pairwise distance</label>
+	<div class="input-group">
+		<input type="text" name="min_pair_dist" id="min_pair_dist" class=
+		{%- if input_check_dic["min_pair_dist"] != "" -%}
+			"form-control is-invalid"
+		{%- else -%}
+			"form-control"
+		{%- endif -%}
+		value="{{ min_pair_dist }}">
+		<div class="input-group-append">
+			<span class="input-group-text" id="basic-addon2">%</span>
+		</div>
+	</div>
+	<small class="form-text text-muted">
+		The minimal pairwise distance in percent sequence similarity that is
+		is needed between any two sequence in the alignment set.
+	</small>
+{{ parameter_check.min_pair_dist_error(input_check_dic) }}
+</div>
+<!-- max_pair_dist -->
+<div class="col">
+	<label for="max_pair_dist">max. pairwise distance</label>
+	<div class="input-group">
+		<input type="text" name="max_pair_dist" id="max_pair_dist" class=
+		{%- if input_check_dic["max_pair_dist"] != "" -%}
+			"form-control is-invalid"
+		{%- else -%}
+			"form-control"
+		{%- endif -%}
+			value="{{ max_pair_dist }}">
+		<div class="input-group-append">
+			<span class="input-group-text" id="basic-addon2">%</span>
+		</div>
+	</div>
+	<small class="form-text text-muted">
+		The maximal pairwise distance in percent sequence similarity that is
+		allowed between any query sequence and the input sequence.
+	</small>
+{{ parameter_check.max_pair_dist_error(input_check_dic) }}
+</div>

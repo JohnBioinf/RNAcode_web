@@ -1,0 +1,36 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+<div class="row">
+	<h1 class="text-center">Bulk Submision</h1>
+</div>
+<div class="row">
+	<h3>Submissions</h3>
+</div>
+{% for job_info in job_info_list %}
+<div class="row">
+		{%- if job_info[1] == "R" %}
+	<h4>
+		<img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20">
+		{%- elif job_info[1] == "F" %}
+	<h4 class="text-warning">
+		<img src="{{ url_for('static', filename='failure.svg')}}" width="20" height="20">
+		{%- elif job_info[1] == "E" %}
+	<h4 class="text-danger">
+		<img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20">
+		{%- elif job_info[1] == "CD" %}
+	<h4 class="text-success">
+		<img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20">
+		{%- endif %}
+		&nbsp;&nbsp;&nbsp;{{ loop.index }}. Job "{{ job_info[0] }}"
+		{%- if job_info[1] == "R" %}
+		is running.
+		{%- elif job_info[1] == "F" %}
+		finished with no result.
+		{%- elif job_info[1] == "CD" %}
+		finished sucessfully.
+		{%- endif %}
+		<a href="{{ url_for("submission_by_url", job_id=job_info[0]) }}">See full results</a>
+	</h4>
+</div>
+{% endfor %}
+{% endblock %}

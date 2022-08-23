@@ -1,0 +1,39 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+<div class="row justify-content-center pt-2 pb-5">
+	<div class="col-sm-11 col-md-6 col-lg-4">
+		<img src="{{ url_for('static', filename='RNAcode_logo_full.svg')}}" class="w-100"></a>
+		<h4 class="m-2">Alignment based coding prediction</h4>
+	</div>
+</div>
+<div class="row justify-content-center">
+	<div class="col-sm-12 col-md-11 col-lg-10 col-xl-8">
+		<h5>Welcome to RNAcode Web, a free web service for the prediction of protein
+		coding regions.</h5>
+		<h5>To find out more how RNAcode works in the
+		<a href="{{ url_for('documentation') }}">documentation</a>.</h5>
+		<h5>Or have a look at few sucessful predictions. For example the human gene
+			<a href="{{ url_for('submission_by_url', job_id="PLCH2_human_refseq") }}">
+				PLCH2</a> (phosphodiesterase),
+			<a href="{{ url_for('submission_by_url', job_id="Y54E2A_celgans") }}">
+				Y54E2A</a> found in C. elgans or the
+			<a href="{{ url_for('submission_by_url', job_id="Spike_protein_Covid") }}">
+				spike protein 2</a> from the SARS coronavirus.</h5>
+		<div class=my-5>
+			<h5>You can submit a single sequence</h5>
+			<p><a class="btn btn-primary" role="button" href="{{ url_for('single_submission_fresh') }}">
+					Submit Single Sequence
+			</a></p>
+			<h5>or sequences in bulk.</h5>
+			<p><a class="btn btn-primary" role="button" href="{{ url_for('bulk_submission') }}">
+					Bulk Submission
+			</a></p>
+		</div>
+		<div class=my-5>
+			<h5>If you already submitted a sequence you can check the progress of the
+				job here.</h5>
+{% include "html/input/check_job_section.html" %}
+		</div>
+	</div>
+</div>
+{% endblock %}

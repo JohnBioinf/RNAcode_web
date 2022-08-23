@@ -1,0 +1,63 @@
+<!-- details summary each step -->
+<div class="row my-2">
+	{% for i in range(1, (num_iterations + 1)) %}
+	<div class="ms-4">
+
+	{% if i == num_iterations and (blastn[0] == "CD" and seqSel[0] == "CD") %}
+	<h4>{{ i }}. Iteration <img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"></h4>
+	{% elif i == num_iterations and (blastn[0] == "F" or seqSel[0] == "F")%}
+	<h4>{{ i }}. Iteration <img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"></h4>
+	{% elif i == num_iterations %}
+	<h4>{{ i }}. Iteration <img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"></h4>
+	{% else %}
+	<h4>{{ i }}. Iteration <img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"></h4>
+	{% endif %}
+
+	{% if i == num_iterations %}
+	{% if blastn[0] == "NS" %}
+	<h4 class="ms-4"><img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20"> Blast</h4>
+	{% elif blastn[0] == "R" %}
+	<h4 class="ms-4"><img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"> Blast</h4>
+	{% elif blastn[0] == "F" %}
+	<h4 class="ms-4"><img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"> Blast</h4>
+	{% elif blastn[0] == "CD" %}
+	<h4 class="ms-4"><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"> Blast</h4>
+	{% endif %}
+
+	{% if seqSel[0] == "NS" %}
+	<h4 class="ms-4"><img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20"> Select Sequences</h4>
+	{% elif seqSel[0] == "R" %}
+	<h4 class="ms-4"><img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"> Select Sequences</h4>
+	{% elif seqSel[0] == "F" %}
+	<h4 class="ms-4"><img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"> Select Sequences</h4>
+	{% elif seqSel[0] == "CD" %}
+	<h4 class="ms-4"><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"> Select Sequences</h4>
+	{% endif %}
+	{% endif %}
+	{% endfor %}
+	{% for i in range(1, (num_iterations + 1)) %}
+	</div>
+	{% endfor %}
+
+	<div class="ms-4">
+	{% if alignment[0] == "NS" %}
+	<h4><img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20"> Alignment</h4>
+	{% elif alignment[0] == "R" %}
+	<h4><img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"> Alignment</h4>
+	{% elif alignment[0] == "F" %}
+	<h4><img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"> Alignment</h4>
+	{% elif alignment[0] == "CD" %}
+	<h4><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"> Alignment</h4>
+	{% endif %}
+
+	{% if RNAcode[0] == "NS" %}
+	<h4><img src="{{ url_for('static', filename='blank-check-box.svg')}}" width="20" height="20"> RNAcode</h4>
+	{% elif RNAcode[0] == "R" %}
+	<h4><img src="{{ url_for('static', filename='refresh.svg')}}" width="20" height="20"> RNAcode</h4>
+	{% elif RNAcode[0] == "F" %}
+	<h4><img src="{{ url_for('static', filename='exclamation.svg')}}" width="20" height="20"> RNAcode</h4>
+	{% elif RNAcode[0] == "CD" %}
+	<h4><img src="{{ url_for('static', filename='check-box.svg')}}" width="20" height="20"> RNAcode</h4>
+	{% endif %}
+	</div>
+</div>

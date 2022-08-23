@@ -1,0 +1,20 @@
+{%- if job_hierarchy == "parent" and custom_db-%}
+<div class="row">
+	<h4>Job will be split!</h4>
+	<p>The job will be split up into {{ status_dic|length - 1 }} child processes,
+	which will be processed in parallel. Before the child jobs will be processed a
+	custom data base will be constructed.</p>
+	<p>See <a class="link-dark" href="{{ url_for('documentation') }}" target="_blank">
+		documentation</a> for more information about the splitting and the
+	construction of the data base.</p>
+</div>
+{%- elif job_hierarchy == "parent" -%}
+<div class="row">
+	<h4>Job will be split!</h4>
+	<p>The job will be split up into {{ status_dic|length - 1 }} child processes,
+	which will be processed in parallel.</p>
+	<p>See <a class="link-dark" href="{{ url_for('documentation') }}" target="_blank">
+		documentation</a> for more information about the splitting and
+	parallelisation.</p>
+</div>
+{%- endif -%}

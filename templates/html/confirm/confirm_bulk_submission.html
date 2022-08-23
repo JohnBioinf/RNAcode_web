@@ -1,0 +1,78 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+{% import 'html/input/parameter_check.html' as parameter_check %}
+<div class="row">
+	<h1 class="text-center">Bulk Submision</h1>
+</div>
+<div class="row">
+	<h4>Submissions</h4>
+</div>
+	{% for job in job_list %}
+		{%- set input_check_dic = job["input_check_dic"] %}
+		{%- set min_pair_dist = job["min_pair_dist"] %}
+		{%- set max_pair_dist = job["max_pair_dist"] %}
+		{%- set job_id = job["invalid_job_id"] %}
+		{%- set db_type = job["db_type"] %}
+		{%- set email = job["email"] %}
+		{%- set input_seq_nuc = job["input_seq_nuc"] %}
+		{%- set job_hierarchy = job["job_hierarchy"] %}
+		{%- set custom_db = job["custom_db"] %}
+		{%- set status_dic = job["status_dic"] %}
+		<div class="accordion" id="{{ job_id }} ">
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="heading{{ loop.index }}">
+					<button class="accordion-button collapsed" type="button"
+																										 data-bs-toggle="collapse"
+																										 data-bs-target="#collapse{{ loop.index }}"
+																										 aria-expanded="false"
+																										 aria-controls="collapse{{ loop.index }}">
+				{%- if input_check_dic["no_error"] %}
+						{{ loop.index }}. Job "{{ job_id }}"
+				{%- else %}
+				<p class="text-danger m-0">{{ loop.index }}. ERROR! Job "{{ job_id }}"</p>
+				{%- endif %}
+					</button>
+				</h2>
+				<div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}">
+					<div class="accordion-body">
+						{%- if input_check_dic["no_error"] %}
+						{% include "html/confirm/information_splitting.html" %}
+						{% include "html/confirm/display_input_parameters.html" %}
+						{%- else %}
+{{ parameter_check.input_seq_nuc_with_variable(input_seq_nuc, input_check_dic) }}
+{{ parameter_check.max_pair_dist_with_variable(max_pair_dist, input_check_dic) }}
+{{ parameter_check.max_pair_dist_with_variable(max_pair_dist, input_check_dic) }}
+{{ parameter_check.email_with_variable(email, input_check_dic) }}
+{{ parameter_check.db_type_with_variable(db_type, input_check_dic) }}
+{{ parameter_check.job_id_with_variable(job_id, input_check_dic) }}
+						{%- endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% if no_errors %}
+<div class="row p-2 justify-content-center">
+	<form action="{{ url_for("submit_bulk", job_id_list=job_id_list) }}" method="post">
+		<div class="col text-center">
+			<input type="submit" class="btn btn-primary mt-2" value="Submit">
+		</div>
+	</form>
+</div>
+<div class="row p-2 justify-content-center">
+	<form action="{{ url_for("change_bulk_submission", job_id_list=job_id_list) }}" method="post">
+		<div class="col text-center">
+				<input type="submit" class="btn btn-primary mt-2" value="Make changes to submission">
+		</div>
+	</form>
+</div>
+{% else %}
+<div class="row p-2 justify-content-center">
+	<form action="{{ url_for("bulk_submission") }}" method="post">
+		<div class="col text-center">
+			<input type="submit" class="btn btn-primary mt-2" value="New submission">
+		</div>
+	</form>
+</div>
+{% endif %}
+{% endblock %}

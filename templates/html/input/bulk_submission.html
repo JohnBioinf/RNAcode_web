@@ -1,0 +1,50 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+<div class="row mb-2">
+	<h1 class="text-center">Bulk Submision</h1>
+</div>
+<div class="row justify-content-center">
+	<div class="col-sm-12 col-md-11 col-lg-10 col-xl-8">
+		<form action="{{ url_for('bulk_submission') }}" method="post" enctype="multipart/form-data">
+			<div class="form-group">
+				<p>
+				<label for="formFile" class="form-label">Upload .json file here.</label>
+				<input class="form-control" type="file" name="json" id="formFile">
+				{% include "html/errors/errors_upload_json.html" %}
+				</p>
+			</div>
+			<small>To facilitate multiple submissions you can submit jobs to the web
+			service via a .json file.
+			<br>The .json file should be an array (each field a job) of associative
+			arrays (each key value pair a parameter). Each value should be given as a
+			string.</small>
+			<div class="col-1 d-grid my-2">
+				<input type="submit" class="btn btn-primary" value="Check Submission">
+			</div>
+		</form>
+		<h4>Example</h4>
+		<p><a href="{{ url_for('get_example_bulk_submission') }}">Here</a> you can
+		get an example .json file</p>
+		<h4>Explanation parameters</h4>
+		<div>
+			<dl>
+				<dt>1. input_seq_nuc</dt>
+				<dd>Input nucleotide Sequence. Genomic region which should be analysed.</dd>
+				<dt>2. job_id</dt>
+				<dd>Identifier for your submission. Only letters, numbers, "-" and "_".</dd>
+				<dt>3. email</dt>
+				<dd>Email address which will be notified when the job finished. Leave
+				empty if you wish no notification via email.</dd>
+				<dt>4. min_pair_dist</dt>
+				<dd>The minimal pairwise distance in percent sequence similarity that is
+				is needed between any two sequence in the alignment set. </dd>
+				<dt>5. max_pair_dist</dt>
+				<dd>The maximal pairwise distance in percent sequence similarity that is
+				allowed between any query sequence and the input sequence. </dd>
+				<dt>5. db_type</dt>
+				<dd>The name of the NCBI data base which should be used either "nt" or "refseq".</dd>
+			</dl>
+		</div>
+	</div>
+</div>
+{% endblock %}

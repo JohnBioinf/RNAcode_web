@@ -1,0 +1,15 @@
+<div class="row">
+	<form action="{{ url_for('submission_by_form') }}" method="post">
+		<div class="col">
+			<label for="Name">Submission Name</label>
+			<input type="text" name="job_id_list" id="job_id_list" class="form-control"
+			placeholder="Zaphod-Beeblebrox or Zaphod-Beeblebrox;Trillian-Astra">
+			<small class="form-text text-muted">
+				Name of your submission or list of names seperated by ";".
+			</small>
+		</div>
+		<div class="row">
+			<p><input type="submit" class="btn btn-primary mt-2" value="Check"></p>
+		</div>
+	</form>
+</div>
