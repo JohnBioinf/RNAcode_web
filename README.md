@@ -128,12 +128,11 @@ The config files are `RNAcode_web.wsgi` and `apache.conf`.
 On the current startpage and the input page a few examples are given for
 succesfull RNAcode Web jobs. The submission for these jobs was done as a bulk
 submission using the file `static/jobs_publication.json`. If the server is setup
-freshly the examples will not be available either submit new with the file (yet
-this might change the outcome of the results depending how much the blast data
-bases changed) or simply coppy all files from the <a
+freshly the examples will not be available either submit them new with the file,
+which might change the results. The original result files from the backend can
+be found in the <a
 href="http://www.bioinf.uni-leipzig.de/Publications/SUPPLEMENTS/22-004/results_publication/">supplements</a>
-of the publication to the workdir of the backend and use the job submision files
-found in `./job_submissions`.
+of the publication.
 
 ## Logging
 
