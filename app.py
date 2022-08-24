@@ -178,7 +178,8 @@ RELOAD_DELAY = 240
 UNI_NETS = [ip_network(server_parameters_frontend["uni_net_space"])]
 LIMITER = Limiter(
     app,
-    key_func=get_remote_address
+    key_func=get_remote_address,
+    storage_uri="redis://localhost:6379",
     # default limits also limit files in static should be not the case. Maybe an
     # update would fix this.
     # default_limits=["200 per day", "50 per hour"]

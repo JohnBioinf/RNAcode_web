@@ -123,6 +123,13 @@ request to the backend machine. Further the above mentioned script
 For the deployment an apache server, which runs the module 'mod_wsgi', was used.
 The config files are `RNAcode_web.wsgi` and `apache.conf`.
 
+## Redis
+
+To limit the user request for bulk submission flask_limiter is used. To work
+properly in a production enviroment a redis data base must be installed and
+available, see
+[here](https://redis.io/docs/getting-started/#installing-redis-more-properly)
+
 ## Example Results
 
 On the current startpage and the input page a few examples are given for

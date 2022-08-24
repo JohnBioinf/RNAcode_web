@@ -48,7 +48,6 @@ if [ ! -d "$production_dir/job_submissions" ]; then
 	mkdir "$production_dir/job_submissions"
 fi
 
-exit 0
 # Python
 if [ ! -d "$python_env_path" ]; then
 	mkdir "$python_env_path"
@@ -70,6 +69,7 @@ pip install APScheduler
 pip install Flask-Limiter
 pip install requests-futures
 pip install filelock
+pip install redis
 
 # R
 ./system_setup/build_R.sh "$R_bin"
