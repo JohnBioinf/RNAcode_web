@@ -164,7 +164,15 @@ app.jinja_env.lstrip_blocks = True
 # Limiter parameters
 # bulk submission
 BULK_TIME_LIMIT = "1 per day"
-BULK_LIMIT_MESSAGE = f"A bulk submission can only be done {BULK_TIME_LIMIT}."
+
+
+# Currently limit is only set for bulk submissions
+@app.errorhandler(429)
+def rate_limit_handler(error):
+    """Create limit error html."""
+    return render_template("html/errors/bulk_rate_limit.html", BULK_TIME_LIMIT=BULK_TIME_LIMIT)
+
+
 # Delay in seconds when a result page should be reloaded.
 RELOAD_DELAY = 240
 UNI_NETS = [ip_network(server_parameters_frontend["uni_net_space"])]
@@ -675,7 +683,6 @@ def list_bulk(job_id_list):
 @LIMITER.limit(
     BULK_TIME_LIMIT,
     exempt_when=visitor_has_no_restriction,
-    error_message=BULK_LIMIT_MESSAGE,
 )
 @handle_internal_exception
 def submit_bulk(job_id_list):

@@ -123,6 +123,18 @@ request to the backend machine. Further the above mentioned script
 For the deployment an apache server, which runs the module 'mod_wsgi', was used.
 The config files are `RNAcode_web.wsgi` and `apache.conf`.
 
+## Example Results
+
+On the current startpage and the input page a few examples are given for
+succesfull RNAcode Web jobs. The submission for these jobs was done as a bulk
+submission using the file `static/jobs_publication.json`. If the server is setup
+freshly the examples will not be available either submit new with the file (yet
+this might change the outcome of the results depending how much the blast data
+bases changed) or simply coppy all files from the <a
+href="http://www.bioinf.uni-leipzig.de/Publications/SUPPLEMENTS/22-004/results_publication/">supplements</a>
+of the publication to the workdir of the backend and use the job submision files
+found in `./job_submissions`.
+
 ## Logging
 
 Both backend and frontend will produce log files. The backend machine will use

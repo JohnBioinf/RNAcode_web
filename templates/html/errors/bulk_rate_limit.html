@@ -1,0 +1,7 @@
+{% extends "html/skeleton/base_layout.html" %}
+{% block content %}
+<div class="container text-center m-2">
+	<h3>To many bulk submissions!</h3>
+	<h3>Bulk submissions are currently limited to {{ BULK_TIME_LIMIT }}.</h3>
+</div>
+{% endblock %}
