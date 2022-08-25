@@ -932,6 +932,7 @@ def favicon():
 @handle_internal_exception
 def result_file(file_name):
     """Serve result files."""
+    vprint("Visiting /results/{file_name} to result_file()", verbose_level=1)
     return send_from_directory(RESULT_DIR, file_name)
 
 
