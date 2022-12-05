@@ -6,9 +6,9 @@
 <small class="text-danger">
 	The provided .json file was not well formatted: {{ bulk_check_dic["json_formatting"] }}
 </small>
-{%- elif bulk_check_dic["num_job"] != "" -%}
+{%- elif bulk_check_dic["num_jobs"] != "" -%}
 <small class="text-danger">
-	You can not submit more than {{ bulk_check_dic["num_job"] }}
+	You can not submit more than {{ bulk_check_dic["num_jobs"] jobs}}
 </small>
 {%- else -%}
 {%- if bulk_check_dic["dic"] != [] -%}

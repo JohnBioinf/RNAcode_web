@@ -112,10 +112,15 @@ def clean_up():
             continue
         job_id = job_submission_file.replace(".json", "")
         # Ignore jobs from publication.
+        is_static_job = False
         for static_job_id in STATIC_JOB_IDS:
             # job_id can be static_job_id_child_n
             if static_job_id in job_id:
+                is_static_job = True
                 continue
+        if is_static_job:
+            continue
+
         with JobSubmission(job_id) as job_submission:
             submission_date = datetime.strptime(
                 job_submission.date, DATE_FORMATION
@@ -178,7 +183,8 @@ RELOAD_DELAY = 240
 UNI_NETS = [ip_network(server_parameters_frontend["uni_net_space"])]
 LIMITER = Limiter(
     app,
-    key_func=get_remote_address
+    key_func=get_remote_address,
+    storage_uri="redis://localhost:6379",
     # default limits also limit files in static should be not the case. Maybe an
     # update would fix this.
     # default_limits=["200 per day", "50 per hour"]
@@ -900,6 +906,10 @@ def submission_by_url(job_id):
 
 
 @app.route("/privacy")
+@LIMITER.limit(
+    BULK_TIME_LIMIT,
+    exempt_when=visitor_has_no_restriction,
+)
 def privacy():
     """Return privacy notes."""
     return render_template("html/content/privacy.html")

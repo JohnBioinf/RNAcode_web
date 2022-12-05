@@ -101,7 +101,7 @@ MAX_INPUT_LEN = 200 * CHILD_LENGTH
 MAX_JOB_NAME_LENGTH = 80
 
 # Bulk Submission
-MAX_JOBS_BULK = 10
+MAX_JOBS_BULK = 12
 # keys of parameters in json for bulk submission
 JSON_KEYS = set(
     [
@@ -180,7 +180,7 @@ def check_bulk_json(json_file_path):
     bulk_check_dic = {
         "error": False,
         "no_file": "",
-        "num_job": "",
+        "num_jobs": "",
         "json_formatting": "",
         "dic": [],
         "keys": [],
@@ -199,16 +199,12 @@ def check_bulk_json(json_file_path):
             bulk_check_dic["json_formatting"] = str(err)
             bulk_check_dic["error"] = True
         else:
+            job_ids = []
             num_jobs = len(parameter_list)
             if num_jobs > MAX_JOBS_BULK + 1:
-                bulk_check_dic["num_jobs"] = (
-                    f"{MAX_JOBS_BULK}, the "
-                    "array of the json file "
-                    f"contained {num_jobs} fields."
-                )
+                bulk_check_dic["num_jobs"] = MAX_JOBS_BULK
                 bulk_check_dic["error"] = True
             else:
-                job_ids = []
                 bulk_check_dic["dic"] = []
                 bulk_check_dic["keys"] = []
                 bulk_check_dic["values"] = []
@@ -234,6 +230,7 @@ def check_bulk_json(json_file_path):
                 bulk_check_dic["dic"] == []
                 and bulk_check_dic["keys"] == []
                 and bulk_check_dic["values"] == []
+                and bulk_check_dic["num_jobs"] == []
             ):
                 if len(job_ids) != len(set(job_ids)):
                     bulk_check_dic["job_ids"] = "The job ids must be unique"
