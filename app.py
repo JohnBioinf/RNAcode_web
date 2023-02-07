@@ -18,7 +18,7 @@ import smtplib
 
 # Flask
 from flask import Flask, render_template, request, redirect, url_for, Response
-from flask import send_file, send_from_directory
+from flask import send_file, send_from_directory, abort
 
 # Limiting access of users
 from flask_limiter import Limiter
@@ -111,6 +111,8 @@ def clean_up():
         if job_submission_file.split(".")[-1] != "json":
             continue
         job_id = job_submission_file.replace(".json", "")
+
+        vprint(f"Look at job {job_id}", verbose_level=3)
         # Ignore jobs from publication.
         is_static_job = False
         for static_job_id in STATIC_JOB_IDS:
@@ -119,6 +121,7 @@ def clean_up():
                 is_static_job = True
                 continue
         if is_static_job:
+            vprint(f"Is static job", verbose_level=3)
             continue
 
         with JobSubmission(job_id) as job_submission:
@@ -177,6 +180,10 @@ def rate_limit_handler(error):
     """Create limit error html."""
     return render_template("html/errors/bulk_rate_limit.html", BULK_TIME_LIMIT=BULK_TIME_LIMIT)
 
+@app.errorhandler(503)
+def service_unavailable_handler(error):
+    """Create service unavailable (maintenance) error html."""
+    return render_template("html/errors/service_unavailable.html")
 
 # Delay in seconds when a result page should be reloaded.
 RELOAD_DELAY = 240
@@ -295,6 +302,16 @@ def send_notification(job_submission):
         subject = "Job submitted to RNAcode Web"
 
     send_mail(subject, job_submission.email, content)
+
+
+@app.before_request
+def check_under_maintenance():
+    """Routing if under maintenance.
+    
+    Add file maintenance to base dir will redirect all requests to '503'.
+    """
+    if os.path.exists("maintenance") and request.endpoint not in ("static"):
+        abort(503)
 
 
 @handle_internal_exception

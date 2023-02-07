@@ -1095,7 +1095,7 @@ class JobSubmission:
                     frame = (start % 3) + 1
                     line[2] = str(frame)
                     self.hss_table.append(
-                        line + [[f"results/{self.job_id}_hss-{line[0]}.eps"]]
+                        line + [[f"{self.job_id}_hss-{line[0]}.eps"]]
                     )
 
         return self.hss_table

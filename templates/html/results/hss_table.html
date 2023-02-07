@@ -44,7 +44,7 @@
 				<td>{{line[10]}}</td>
 				<td>
 				{% for plot_file in line[11] %}
-				<a href="{{ url_for('static', filename=plot_file)}}" class="link-dark">Plot</a><br>
+				<a href="{{ url_for('result_file', file_name=plot_file)}}" class="link-dark">Plot</a><br>
 				{% endfor %}
 				</td>
 			</tr>
