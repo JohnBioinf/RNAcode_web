@@ -19,6 +19,7 @@ import smtplib
 # Flask
 from flask import Flask, render_template, request, redirect, url_for, Response
 from flask import send_file, send_from_directory, abort
+from werkzeug.exceptions import NotFound
 
 # Limiting access of users
 from flask_limiter import Limiter
@@ -923,10 +924,6 @@ def submission_by_url(job_id):
 
 
 @app.route("/privacy")
-@LIMITER.limit(
-    BULK_TIME_LIMIT,
-    exempt_when=visitor_has_no_restriction,
-)
 def privacy():
     """Return privacy notes."""
     return render_template("html/content/privacy.html")
@@ -958,9 +955,11 @@ def favicon():
 @handle_internal_exception
 def result_file(file_name):
     """Serve result files."""
-    vprint("Visiting /results/{file_name} to result_file()", verbose_level=1)
-    return send_from_directory(RESULT_DIR, file_name)
-
+    vprint(f"Visiting /results/{file_name} to result_file()", verbose_level=1)
+    try:
+        return send_from_directory(RESULT_DIR, file_name)
+    except NotFound:
+        return render_template("html/errors/file_not_found.html")
 
 @app.route("/test_error_admin")
 @handle_internal_exception
