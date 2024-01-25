@@ -136,7 +136,6 @@ def blank_job_submission():
         "lock_path": f"{path}.lock",
         "job_hierarchy": "orphan",
         "input_seq_nuc": "",
-        "input_fasta": "",
         "genome_start": None,
         "genome_stop": None,
         "min_pair_dist": MIN_PAIR_DIST_DEFAULT,
@@ -550,7 +549,14 @@ class JobSubmission:
             for attribute, error in self.input_check_dic.items():
                 if attribute == "no_error":
                     continue
-                if error != "":
+                if error == "":
+                    continue
+                if attribute == "input_fasta":
+                    vprint(
+                        f"Attribute {attribute}: Has error: {error}.",
+                        verbose_level=2,
+                    )
+                else:
                     vprint(
                         f"Attribute {attribute}: {getattr(self,attribute)} has error: {error}.",
                         verbose_level=2,
