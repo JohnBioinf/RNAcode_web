@@ -30,9 +30,16 @@ from RNAcodeWebCore import WORK_DIR
 from RNAcodeWebCore import CURRENT_WORK_DIR_TEMPLATE
 
 
+# Level of how much stuff should be logged. Either 0, 1, 2, 3.
+VERBOSE_LEVEL = 3
 def vprint(msg, verbose_level=0):
     """Print to verbose."""
-    check_verbose_level(verbose_level)
+
+    # Check if verbose level is in correct form
+    if not isinstance(verbose_level, int):
+        raise ValueError("verbose level must be an integer")
+    if 0 > verbose_level > 3:
+        raise ValueError("verbose level must be between 0 and 3")
     msg = datetime.datetime.today().strftime("[%d/%b/%Y %H:%M:%S] - - ") + str(msg)
     if verbose_level <= VERBOSE_LEVEL:
         with open(f"{LOG_DIR}/{os.getpid()}.log", "a", encoding="UTF-8") as f_handle:
@@ -82,8 +89,6 @@ MIN_PAIR_DIST_DEFAULT = "10.0"
 MAX_PAIR_DIST_DEFAULT = "60.0"
 
 DATE_FORMATION = "%B %d, %Y"
-# Level of how much stuff should be logged. Either 0, 1, 2, 3.
-VERBOSE_LEVEL = 3
 
 IUPAC_ALPHABET = set("ACGTRYSWKMBDHVN")
 # Window size into which a child process will be cut from its parent job.
@@ -131,6 +136,7 @@ def blank_job_submission():
         "lock_path": f"{path}.lock",
         "job_hierarchy": "orphan",
         "input_seq_nuc": "",
+        "input_fasta": "",
         "genome_start": None,
         "genome_stop": None,
         "min_pair_dist": MIN_PAIR_DIST_DEFAULT,
@@ -293,14 +299,6 @@ def generate_bulk_submission_example():
     job_1["blast_db"] = "nt"
 
     return json.dumps([job_1, job_2], indent=4)
-
-
-def check_verbose_level(verbose_level):
-    """Check if verbose levl is in correct form."""
-    if not isinstance(verbose_level, int):
-        raise ValueError("verbose level must be an integer")
-    if 0 > verbose_level > 3:
-        raise ValueError("verbose level must be between 0 and 3")
 
 
 def _ssh_call(call_str):

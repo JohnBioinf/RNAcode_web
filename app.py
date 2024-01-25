@@ -189,6 +189,7 @@ def service_unavailable_handler(error):
 # Delay in seconds when a result page should be reloaded.
 RELOAD_DELAY = 240
 UNI_NETS = [ip_network(server_parameters_frontend["uni_net_space"])]
+# LIMITER = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
 LIMITER = Limiter(
     app,
     key_func=get_remote_address,
